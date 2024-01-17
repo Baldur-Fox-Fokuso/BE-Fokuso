@@ -3,8 +3,13 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 
 import userResolvers from "./resolvers/user";
 import userTypeDefs from "./schema/user";
+import authentication from "./middleware/authentication";
 
-const server = new ApolloServer({
+interface MyContext {
+  token?: String;
+}
+
+const server = new ApolloServer<MyContext>({
   typeDefs: [userTypeDefs],
   resolvers: [userResolvers],
   introspection: true,
@@ -13,7 +18,12 @@ const server = new ApolloServer({
 async function startServer() {
   try {
     const { url } = await startStandaloneServer(server, {
-      listen: { port: Number(process.env.PORT) || 3000 },
+      context: async ({ req, res }) => {
+        return {
+          authentication: async () => await authentication({ req }),
+        };
+      },
+      listen: { port: 4000 },
     });
     console.log(`Server read at: ${url}`);
   } catch (error) {
