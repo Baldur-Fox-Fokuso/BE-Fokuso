@@ -8,7 +8,10 @@ import { ObjectId } from "mongodb";
 
 const userResolvers = {
   Query: {
-    getUser: async (_, args) => {},
+    getUser: async (_, args, contextValue) => {
+      const user = await contextValue.authentication();
+      return user;
+    },
   },
   Mutation: {
     register: async (_, args) => {
@@ -17,8 +20,8 @@ const userResolvers = {
       const result = await UserModel.create(NewUser);
       return NewUser;
     },
-    login: async (_, args) => {
-      const { email, password } = args;
+    login: async (_, { email, password }) => {
+      // const { email, password } = args;
       const findUser = await UserModel.getByEmail(email);
       if (!findUser) {
         throw new GraphQLError("Invalid email/password", {

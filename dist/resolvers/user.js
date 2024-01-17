@@ -9,7 +9,10 @@ const jwt_1 = require("../helpers/jwt");
 const user_1 = __importDefault(require("../models/user"));
 const userResolvers = {
     Query: {
-        getUser: async (_, args) => { },
+        getUser: async (_, args, contextValue) => {
+            const user = await contextValue.authentication();
+            return user;
+        },
     },
     Mutation: {
         register: async (_, args) => {
@@ -18,8 +21,8 @@ const userResolvers = {
             const result = await user_1.default.create(NewUser);
             return NewUser;
         },
-        login: async (_, args) => {
-            const { email, password } = args;
+        login: async (_, { email, password }) => {
+            // const { email, password } = args;
             const findUser = await user_1.default.getByEmail(email);
             if (!findUser) {
                 throw new graphql_1.GraphQLError("Invalid email/password", {
