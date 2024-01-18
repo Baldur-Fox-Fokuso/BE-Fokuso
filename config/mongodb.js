@@ -10,19 +10,9 @@ const client = new MongoClient(uri, {
   },
 });
 
-let db;
-async function connect() {
-  try {
-    const database = client.db("sample_gc01");
-    db = database;
-    return database;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-function getDb() {
-  return db;
-}
+export const db = client.db("db_fokuso");
+export const getCollection = (collectionName) => {
+  return db.collection(collectionName);
+};
 
 module.exports = { connect, getDb };
