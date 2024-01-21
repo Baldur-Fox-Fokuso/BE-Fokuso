@@ -27,12 +27,12 @@ class UserController {
     try {
       const { userId } = req.body;
       if (!userId) {
-        throw { code: 400, message: 'invalid input' }
+        throw { code: 400, message: "invalid input" };
       }
       const user = await this.getDb().findOne({
         _id: new ObjectId(userId),
       });
-      res.status(200).json(user)
+      res.status(200).json(user);
     } catch (error) {
       console.log(error);
       next(error);
@@ -43,14 +43,19 @@ class UserController {
     try {
       const { name, email, password } = req.body;
       if (!name || !email || !password) {
-        throw { code: 400, message: 'invalid input' }
+        throw { code: 400, message: "invalid input" };
       }
 
-      const hashedPassword = hashPass(password)
-      const user = await getCollection("users").insertOne({ name, email, password: hashedPassword });
+      const hashedPassword = hashPass(password);
+      const user = await getCollection("users").insertOne({
+        name,
+        email,
+        password: hashedPassword,
+      });
       res.status(201).json({
-        id: user.id,
-        email: user.email,
+        id: user.insertedId,
+        name,
+        email,
       });
     } catch (error) {
       console.log(error);
