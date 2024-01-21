@@ -1,12 +1,12 @@
 const { ObjectId } = require("mongodb");
 const { getCollection } = require("../config/mongodb");
 
-class Session {
+class SessionConstrctor {
   static getDb() {
     return getCollection("session");
   }
 
-  static async create(data) {
+  static async create(req, res, next) {
     try {
       await this.getDb().insertOne(data);
       res.status(201).json({
@@ -58,4 +58,4 @@ class Session {
   }
 }
 
-module.exports = Session;
+module.exports = SessionConstrctor;

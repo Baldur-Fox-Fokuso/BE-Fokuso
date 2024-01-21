@@ -1,20 +1,38 @@
 const { getCollection } = require("../config/mongodb");
-const { getDb } = require("../config/mongodb");
 const { comparePass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
+// const validate = require("validate.js")
+//
+// const userConstraints = {
+//   name: {
+//     presence: true
+//   },
+//   email: {
+//     presence: true,
+//     allowEmpty: false,
+//     email: true
+//   },
+//   password: {
+//     presence: true,
+//     length: 8
+//   }
+// }
 
-class User {
+class UserController {
   static getDb() {
     return getCollection("users");
   }
 
   static async getById(req, res, next) {
     try {
-      const { userId } = req.user;
+      const { userId } = req.body;
+      if (!userId) {
+        throw { code: 400, message: 'invalid input' }
+      }
       const user = await this.getDb().findOne({
-        _id: new ObjectId(_id),
+        _id: new ObjectId(userId),
       });
-      return user;
+      res.status(200).json(user)
     } catch (error) {
       console.log(error);
       next(error);
@@ -24,7 +42,11 @@ class User {
   static async register(req, res, next) {
     try {
       const { name, email, password } = req.body;
-      const user = await this.getDb().insertOne({ name, email, password });
+      if (!name || !email || !password) {
+        throw { code: 400, message: 'invalid input' }
+      }
+
+      const user = await getCollection("users").insertOne({ name, email, password });
       res.status(201).json({
         id: user.id,
         email: user.email,
@@ -39,17 +61,17 @@ class User {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
-        throw { name: "invalid_input" };
+        throw { code: 400, message: "invalid_input" };
       }
 
       const user = await this.getDb().findOne({ email });
       if (!user) {
-        throw { name: "invalid_email/password" };
+        throw { code: 401, message: "invalid_email/password" };
       }
 
       const checkPass = comparePass(password, user.password);
       if (!checkPass) {
-        throw { name: "invalid_email/password" };
+        throw { code: 401, message: "invalid_email/password" };
       }
 
       const access_token = createToken({
@@ -68,4 +90,4 @@ class User {
   }
 }
 
-module.exports = User;
+module.exports = UserController;

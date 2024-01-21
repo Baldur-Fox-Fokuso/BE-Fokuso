@@ -1,12 +1,12 @@
 const { ObjectId } = require("mongodb");
 const { getCollection } = require("mongodb");
 
-class TaskModel {
+class TaskController {
   static getDb() {
-    return getCollection("taks");
+    return getCollection("task");
   }
 
-  static async create(res, req, next) {
+  static async create(req, res, next) {
     try {
       const result = await this.getDb().insertOne(data);
       res.status(200).json({
@@ -18,7 +18,7 @@ class TaskModel {
     }
   }
 
-  static async getById(res, req) {
+  static async getById(req, res) {
     try {
       const task = await this.getDb().findOne({
         _id: new ObjectId(_id),
@@ -30,7 +30,7 @@ class TaskModel {
     }
   }
 
-  static async getByUser(res, req, next) {
+  static async getByUser(req, res, next) {
     try {
       const { userId } = req.body;
       const tasks = await this.getDb()
@@ -44,4 +44,4 @@ class TaskModel {
   }
 }
 
-export default TaskModel;
+export default TaskController;
