@@ -1,3 +1,4 @@
+require("dotenv").config()
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = process.env.MONGO_URI;
 
@@ -10,9 +11,9 @@ const client = new MongoClient(uri, {
   },
 });
 
-export const db = client.db("db_fokuso");
-export const getCollection = (collectionName) => {
+const db = client.db("db_fokuso");
+const getCollection = (collectionName) => {
   return db.collection(collectionName);
 };
 
-module.exports = { connect, getDb };
+module.exports = { getCollection, db };
