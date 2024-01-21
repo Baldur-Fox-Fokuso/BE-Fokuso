@@ -13,7 +13,7 @@ class TaskController {
         throw { code: 400, message: 'Invalid input' }
       }
 
-      const result = await getCollection("task").insertOne({
+      const result = await getCollection("tasks").insertOne({
         name,
         userId: new ObjectId(userId),
         sessions: []
@@ -35,7 +35,7 @@ class TaskController {
         throw { code: 400, message: 'Invalid input' }
       }
 
-      const task = await getCollection("task").findOne({
+      const task = await getCollection("tasks").findOne({
         _id: new ObjectId(taskId),
       });
 
@@ -53,7 +53,7 @@ class TaskController {
         throw { code: 400, message: 'Invalid input' }
       }
 
-      const tasks = await getCollection("task")
+      const tasks = await getCollection("tasks")
         .find({ userId: new ObjectId(userId) })
         .toArray();
 
