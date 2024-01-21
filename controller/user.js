@@ -1,5 +1,5 @@
 const { getCollection } = require("../config/mongodb");
-const { comparePass } = require("../helpers/bcrypt");
+const { comparePass, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 // const validate = require("validate.js")
 //
@@ -46,7 +46,8 @@ class UserController {
         throw { code: 400, message: 'invalid input' }
       }
 
-      const user = await getCollection("users").insertOne({ name, email, password });
+      const hashedPassword = hashPass(password)
+      const user = await getCollection("users").insertOne({ name, email, password: hashedPassword });
       res.status(201).json({
         id: user.id,
         email: user.email,
