@@ -1,31 +1,47 @@
 const { ObjectId } = require("mongodb");
-const { getCollection } = require("mongodb");
+const { getCollection } = require("../config/mongodb");
 
 class TaskController {
   static getDb() {
-    return getCollection("task");
+    return getCollection("tasks");
   }
 
   static async create(req, res, next) {
     try {
-      const result = await this.getDb().insertOne(data);
+      const { name, userId } = req.body
+      if (!name || !userId) {
+        throw { code: 400, message: 'Invalid input' }
+      }
+
+      const result = await getCollection("task").insertOne({
+        name,
+        userId: new ObjectId(userId),
+        sessions: []
+      });
+
       res.status(200).json({
         message: "Task created successfully",
       });
     } catch (error) {
-      console.log(error);
+      console.log(error, '<-- Task Create Error');
       next(error);
     }
   }
 
   static async getById(req, res) {
     try {
-      const task = await this.getDb().findOne({
-        _id: new ObjectId(_id),
+      const { taskId } = req.body
+      if (!taskId) {
+        throw { code: 400, message: 'Invalid input' }
+      }
+
+      const task = await getCollection("task").findOne({
+        _id: new ObjectId(taskId),
       });
+
       res.status(200).json(task);
     } catch (error) {
-      console.log(error);
+      console.log(error, '<-- Task getById error');
       next(error);
     }
   }
@@ -33,15 +49,20 @@ class TaskController {
   static async getByUser(req, res, next) {
     try {
       const { userId } = req.body;
-      const tasks = await this.getDb()
+      if (!userId) {
+        throw { code: 400, message: 'Invalid input' }
+      }
+
+      const tasks = await getCollection("task")
         .find({ userId: new ObjectId(userId) })
         .toArray();
+
       res.status(200).json(tasks);
     } catch (error) {
-      console.log(error);
+      console.log(error, '<-- Task getByUser error');
       next(error);
     }
   }
 }
 
-export default TaskController;
+module.exports = TaskController;
