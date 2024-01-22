@@ -18,7 +18,7 @@ const { createToken } = require("../helpers/jwt");
 //   }
 // }
 function getDb() {
-  return getCollection("users")
+  return getCollection("users");
 }
 
 class UserController {
