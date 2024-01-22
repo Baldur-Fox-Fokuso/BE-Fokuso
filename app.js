@@ -13,15 +13,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-app.post('/login', UserController.login)
-app.post('/register', UserController.register)
-app.get('/user/:userId', UserController.getById)
-app.get('/user/:userId/task', TaskController.getByUser)
-app.post('/task', TaskController.create)
-app.post('/task/:taskId', TaskController.getById)
+app.post('/login', UserController.login);
+app.post('/register', UserController.register);
+app.get('/user/:userId', UserController.getById);
+app.get('/user/:userId/task', TaskController.getByUser);
+app.post('/task', TaskController.create);
+app.post('/task/:taskId', TaskController.getById);
 
 // error helper
-app.use(ErrorHandler)
+app.use(ErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`🚀🚀🚀 Reading server at:${PORT}`);
