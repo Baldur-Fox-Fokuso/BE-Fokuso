@@ -17,19 +17,22 @@ const { createToken } = require("../helpers/jwt");
 //     length: 8
 //   }
 // }
+function getDb() {
+  return getCollection("users")
+}
 
 class UserController {
-  static getDb() {
-    return getCollection("users");
-  }
+  // static getDb() {
+  //   return getCollection("users");
+  // }
 
   static async getById(req, res, next) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
       if (!userId) {
         throw { code: 400, message: "invalid input" };
       }
-      const user = await this.getDb().findOne({
+      const user = await getDb().findOne({
         _id: new ObjectId(userId),
       });
       res.status(200).json(user);
@@ -70,7 +73,7 @@ class UserController {
         throw { code: 400, message: "invalid_input" };
       }
 
-      const user = await this.getDb().findOne({ email });
+      const user = await getDb().findOne({ email });
       if (!user) {
         throw { code: 401, message: "invalid_email/password" };
       }

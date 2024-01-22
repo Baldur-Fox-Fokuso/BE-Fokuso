@@ -1,14 +1,22 @@
 const { ObjectId } = require("mongodb");
 const { getCollection } = require("../config/mongodb");
+const { verifyToken } = require("../helpers/jwt");
+function getDb() {
+  return getCollection("tasks");
+}
 
 class TaskController {
-  static getDb() {
-    return getCollection("tasks");
-  }
+  // static getDb() {
+  //   return getCollection("tasks");
+  // }
 
   static async create(req, res, next) {
     try {
-      const { name, userId } = req.body
+      const { name, } = req.body
+
+      const { authorization } = req.headers
+      const userId = verifyToken(authorization.split(" ")[1])
+
       if (!name || !userId) {
         throw { code: 400, message: 'Invalid input' }
       }
@@ -30,7 +38,7 @@ class TaskController {
 
   static async getById(req, res) {
     try {
-      const { taskId } = req.body
+      const { taskId } = req.params
       if (!taskId) {
         throw { code: 400, message: 'Invalid input' }
       }
@@ -48,7 +56,7 @@ class TaskController {
 
   static async getByUser(req, res, next) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
       if (!userId) {
         throw { code: 400, message: 'Invalid input' }
       }

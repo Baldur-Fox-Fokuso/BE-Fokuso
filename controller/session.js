@@ -1,14 +1,21 @@
 const { ObjectId } = require("mongodb");
 const { getCollection } = require("../config/mongodb");
 
+function getDb() {
+  return getCollection("tasks");
+}
+
 class SessionConstrctor {
-  static getDb() {
-    return getCollection("session");
-  }
+  // static getDb() {
+  //   return getCollection("session");
+  // }
 
   static async create(req, res, next) {
     try {
-      await this.getDb().insertOne(data);
+      const { taskId, name, duration } = req.body
+      // validate variables in req.body
+
+      await getDb().insertOne(data);
       res.status(201).json({
         message: "Session created successfully",
       });
@@ -20,7 +27,7 @@ class SessionConstrctor {
 
   static async getById(_id) {
     try {
-      const session = await this.getDb.findOne({ _id });
+      const session = await getDb.findOne({ _id });
       res.status(200).json(session);
     } catch (error) {
       console.log(error);
@@ -30,7 +37,7 @@ class SessionConstrctor {
 
   static async getByTaksId(taskId) {
     try {
-      const sessions = await this.getDb
+      const sessions = await getDb
         .find({ taskId: new ObjectId(taskId) })
         .toArray();
 
@@ -43,11 +50,11 @@ class SessionConstrctor {
 
   static async isDone(_id) {
     try {
-      const session = await this.getDb().findOne({ _id });
+      const session = await getDb().findOne({ _id });
       if (!session) {
         throw { name: "not_found" };
       }
-      await this.getDb().updateOne({ _id }, { $set: { isDone: true } });
+      await getDb().updateOne({ _id }, { $set: { isDone: true } });
       res.status(201).json({
         message: "Session is done",
       });
