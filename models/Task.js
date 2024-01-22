@@ -1,3 +1,5 @@
+const { ObjectId } = require("mongodb")
+
 class Task {
   constructor(
     userId,
@@ -5,21 +7,27 @@ class Task {
     sessions = [],
     subtasks = [],
     description,
+    deadline,
   ) {
-    this.userId = userId
+    this.userId = new ObjectId(userId)
     this.name = name
     this.sessions = sessions
     this.subtasks = subtasks
     this.description = description
+    this.createdAt = new Date()
+    this.updatedAt = new Date()
+    this.deadline = deadline
   }
 
   static create(
     userId,
     name,
     sessions = [],
-    subtasks = []
+    subtasks = [],
+    description,
+    deadline,
   ) {
-    return new Task(userId, name, sessions, subtasks)
+    return { userId, name, sessions, subtasks, description, deadline }
   }
 }
 
@@ -37,10 +45,10 @@ class SubTask {
   static create(
     taskId,
     name,
-    isDone
+    isDone = false
   ) {
-    return new SubTask(taskId, name, isDone)
+    return { taskId, name, isDone }
   }
 }
 
-module.exports = Task
+module.exports = Task, SubTask
