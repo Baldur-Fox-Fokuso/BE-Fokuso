@@ -15,9 +15,24 @@ class SessionConstrctor {
       const { taskId, name, duration } = req.body
       // validate variables in req.body
 
-      await getDb().insertOne(data);
+      const filter = { _id: new ObjectId(taskId) }
+      const update = {
+        $push: {
+          sessions: {
+            taskId: new ObjectId(taskId),
+            name,
+            duration,
+            isDone: false,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        }
+      }
+      const updateResult = await getDb().updateOne(filter, update)
+
       res.status(201).json({
         message: "Session created successfully",
+        data: updateResult
       });
     } catch (error) {
       console.log(error);
@@ -25,6 +40,7 @@ class SessionConstrctor {
     }
   }
 
+  // TODO:
   static async getById(_id) {
     try {
       const session = await getDb.findOne({ _id });
@@ -35,6 +51,7 @@ class SessionConstrctor {
     }
   }
 
+  // TODO:
   static async getByTaksId(taskId) {
     try {
       const sessions = await getDb
