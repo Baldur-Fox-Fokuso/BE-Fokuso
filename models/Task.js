@@ -3,12 +3,14 @@ class Task {
     userId,
     name,
     sessions = [],
-    subtasks = []
+    subtasks = [],
+    description,
   ) {
     this.userId = userId
     this.name = name
     this.sessions = sessions
     this.subtasks = subtasks
+    this.description = description
   }
 
   static create(
