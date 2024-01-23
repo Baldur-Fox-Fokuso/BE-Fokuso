@@ -18,6 +18,9 @@ app.post('/login', UserController.login);
 app.post('/register', UserController.register);
 app.get('/user/:userId', UserController.getById);
 app.get('/user/:userId/task', TaskController.getByUser);
+app.get('/user/:userId/task/filterByDate', TaskController.filterByDate)
+app.get('/user/:userId/task/today', TaskController.getTodayTasks)
+app.get('/user/:userId/task/recent', TaskController.getRecentTasks)
 app.post('/task', TaskController.create);
 app.get('/task/:taskId', TaskController.getById);
 app.get('/task/:taskId/session', SessionController.getByTaskId);

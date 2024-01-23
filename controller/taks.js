@@ -154,6 +154,122 @@ class TaskController {
       console.log(error, '<-- deleteSubTask error');
     }
   }
+
+  // body: date; params: userId
+  static async filterByDate(req, res, next) {
+    try {
+      const { date } = req.body
+      const { userId } = req.params
+      console.log('TaskController filterByDate') // start logging
+      if (!date) throw { code: 400, message: "Input date is empty" }
+      if (!userId) throw { code: 400, message: "userId is empty" }
+
+      const dateYMD = date.split('T')[0];
+      console.log(dateYMD, '<-- dateYMD')
+
+      const start = new Date(dateYMD)
+      start.setHours(0, 0, 0, 0)
+      console.log(start, '<-- start')
+
+      const end = new Date(dateYMD)
+      end.setHours(23, 59, 59, 999)
+      console.log(end, '<-- end')
+
+      const tasks = await getDb()
+        .find({
+          createdAt: {
+            $gte: start,
+            $lt: end
+          }
+        })
+        .toArray()
+
+      res.status(200).json(tasks)
+
+    } catch (error) {
+      console.log(error, '<-- Error Task filterByDate')
+      next(error)
+    }
+
+  }
+
+  // today is friday in California
+  // params: userId
+  static async getTodayTasks(req, res, next) {
+    try {
+      const { userId } = req.params
+
+      const start = new Date()
+      start.setHours(0, 0, 0, 0)
+      const end = new Date()
+      end.setHours(23, 59, 59, 999)
+
+      const tasks = await getDb()
+        .find({
+          userId: new ObjectId(userId),
+          createdAt: {
+            $gte: start,
+            $lt: end
+          }
+        })
+        .toArray()
+
+      res.status(200).json(tasks)
+
+    } catch (error) {
+      console.log(error, '<-- error Task getTodayTasks')
+    }
+  }
+
+  static async last7Days(req, res, next) {
+    try {
+      const { userId } = req.params
+      console.log('TaskController last7Days start')
+      const today = new Date()
+      const start = today.setDate(today.getDate() - 7)
+
+      const end = new Date()
+      end.setHours(23, 59, 59, 999)
+      console.log("start:", start, "end:", end)
+      const tasks = await getDb()
+        .find({
+          userId: new ObjectId(userId),
+          createdAt: {
+            userId: new ObjectId(userId),
+            $gte: start,
+            $lt: end
+          }
+        })
+        .toArray()
+
+      res.status(200).json(tasks)
+
+    } catch (error) {
+      console.log(error, '<-- TaskController last7Days error')
+    }
+  }
+
+  static async getRecentTasks(req, res, next) {
+    try {
+      const { userId } = req.params
+      const tasks = await getDb()
+        .find({
+          userId: new ObjectId(userId)
+        })
+        .sort({
+          createdAt: -1
+        })
+        .toArray()
+
+      // limit to first 5 tasks
+      const tasksRet = tasks.slice(0, 5)
+
+      res.status(200).json(tasksRet)
+
+    } catch (error) {
+      console.log(error, '<-- TaskController getRecentTasks Error')
+    }
+  }
 }
 
 module.exports = TaskController;
