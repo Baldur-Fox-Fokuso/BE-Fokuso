@@ -13,12 +13,15 @@ class TaskController {
 
   static async create(req, res, next) {
     try {
+      console.log(req.body, "<-- req.body")
       // ambil task name dari req.body
-      const { name, description, deadline } = req.body;
+      const { name, description, deadline, subTasks } = req.body;
 
       // ambil userId dari authorization headers
       const { authorization } = req.headers;
+      console.log(authorization, '<== authorization')
       const userId = verifyToken(authorization.split(" ")[1])
+      console.log(userId, '<-- userId')
       // TODO: ketika tidak ada, lempar error Unauthorized
       if (!userId) {
         throw { code: 401 };
@@ -29,7 +32,7 @@ class TaskController {
         throw { code: 400, message: 'Invalid input' };
       }
 
-      const newTask = Task.create(userId, name, undefined, undefined, description, deadline);
+      const newTask = Task.create(userId, name, undefined, subTasks, description, deadline);
 
       const result = await getCollection("tasks").insertOne(newTask);
 
@@ -105,6 +108,7 @@ class TaskController {
       const update = {
         $push: {
           subtasks: {
+            _id: new ObjectId(),
             taskId: new ObjectId(taskId),
             name,
             isDone: false
