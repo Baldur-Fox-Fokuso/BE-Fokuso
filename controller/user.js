@@ -1,6 +1,7 @@
 const { getCollection } = require("../config/mongodb");
 const { comparePass, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
+const { ObjectId } = require("mongodb")
 // const validate = require("validate.js")
 //
 // const userConstraints = {
@@ -34,6 +35,10 @@ class UserController {
       }
       const user = await getDb().findOne({
         _id: new ObjectId(userId),
+      }, {
+        projection: {
+          password: 0
+        }
       });
       res.status(200).json(user);
     } catch (error) {
