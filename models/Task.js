@@ -23,11 +23,32 @@ class Task {
     userId,
     name,
     sessions = [],
-    subtasks = [],
+    subTasks = [],
     description,
     deadline,
+    isDone = false
   ) {
-    return { userId, name, sessions, subtasks, description, deadline }
+    if (subTasks.length > 0) {
+      let arr = []
+      subTasks.forEach(el => {
+        arr.push({
+          name: el,
+          isDone: false
+        })
+      });
+      subTasks = arr
+    }
+
+    return {
+      userId: new ObjectId(userId._id),
+      name,
+      sessions,
+      subTasks,
+      description,
+      deadline,
+      isDone,
+      createdAt: new Date(),
+    }
   }
 }
 
