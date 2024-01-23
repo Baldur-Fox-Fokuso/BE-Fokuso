@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const UserController = require("./controller/user");
 const ErrorHandler = require("./helpers/error-handler");
 const TaskController = require("./controller/taks");
+const SessionController = require("./controller/session");
 dotenv.config();
 
 app.use(cors());
@@ -18,7 +19,12 @@ app.post('/register', UserController.register);
 app.get('/user/:userId', UserController.getById);
 app.get('/user/:userId/task', TaskController.getByUser);
 app.post('/task', TaskController.create);
-app.post('/task/:taskId', TaskController.getById);
+app.get('/task/:taskId', TaskController.getById);
+app.get('/task/:taskId/session', SessionController.getByTaskId);
+app.post('/task/:taskId/session', SessionController.create);
+app.patch('/task/:taskId/session/:sessionId', SessionController.isDone);
+app.get('/task/:taskId/session/:sessionId', SessionController.getById);
+// app.get('/task/:taskId/session/:sessionId/done', SessionController.isDone);
 
 // error helper
 app.use(ErrorHandler);
