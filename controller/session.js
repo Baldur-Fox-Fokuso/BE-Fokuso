@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { getCollection } = require("../config/mongodb");
+// const isValidObjectId = require("../helpers/validate-objectid");
 
 function getDb() {
   return getCollection("tasks");
@@ -15,7 +16,7 @@ class SessionController {
   static async create(req, res, next) {
     try {
       const { taskId, } = req.params;
-      console.log(taskId, "<-- taskId in create Session")
+      // console.log(taskId, "<-- taskId in create Session")
       // const { name, duration } = req.body;
       // validate variables in req.body
 
@@ -44,51 +45,59 @@ class SessionController {
         sessionId
       });
     } catch (error) {
-      console.log(error, '<-- Error create session');
-      next(error);
+      // TODO: scenario if error
+      // console.log(error, '<-- Error create session');
+      // next(error);
     }
   }
 
   // TODO:
   // input params: taskId, sessionId
-  static async getById(req, res, next) {
-    try {
-      // get taskId and sessionId from request params
-      const { taskId, sessionId } = res.params;
-
-      // get task with taskId
-      const task = await getDb.findOne({ _id: new ObjectId(taskId) });
-
-      // make ObjectId for _id of session
-      const sessionIdObj = new ObjectId(sessionId);
-
-      // find Session inside of Task
-      const session = task.sessions.find(el => {
-        return el._id == sessionIdObj
-      });
-
-      // if that Session exists, send in Response, else 404
-      if (session) {
-        res.status(200).json(session);
-      } else {
-        throw { code: 404 };
-      }
-
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  }
+  // static async getById(req, res, next) {
+  //   try {
+  //     // get taskId and sessionId from request params
+  //     const { taskId, sessionId } = req.params;
+  //
+  //     // get task with taskId
+  //     const task = await getDb().findOne({ _id: new ObjectId(taskId) });
+  //
+  //     // make ObjectId for _id of session
+  //     const sessionIdObj = new ObjectId(sessionId);
+  //
+  //     // find Session inside of Task
+  //     const session = task.sessions.find(el => {
+  //       return el._id == sessionIdObj
+  //     });
+  //
+  //     // if that Session exists, send in Response, else 404
+  //     if (session) {
+  //       res.status(200).json(session);
+  //     } else {
+  //       throw { code: 404 };
+  //     }
+  //
+  //   } catch (error) {
+  //     console.log(error);
+  //     next(error);
+  //   }
+  // }
 
   // TODO:
   // input params: taskId
   static async getByTaskId(req, res, next) {
     try {
       // get taskId from request params
-      const { taskId } = res.params;
+      const { taskId } = req.params;
+
+      // isValidObjectId(taskId)
 
       // get task with taskId
-      const task = await getDb.findOne({ _id: new ObjectId(taskId) });
+      const task = await getDb().findOne({ _id: new ObjectId(taskId) });
+
+      if (!task) {
+        throw { code: 404 }
+      }
+
       // get the sessions
       const sessions = task.sessions;
 
@@ -157,8 +166,8 @@ class SessionController {
       //   message: "Session is done",
       // });
     } catch (error) {
-      console.log(error);
-      next(error);
+      // console.log(error);
+      // next(error);
     }
   }
 }
