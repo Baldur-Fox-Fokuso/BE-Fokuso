@@ -1,12 +1,14 @@
 ## post /login 
-```js
-req.body=
+
+req.body
+```json
 {
   "email": "string",
   "password": "string"
-} 
+} ```
 
-res.json=
+response
+```json
 {
   "_id": "string",
   "access_token": "string"
@@ -14,14 +16,18 @@ res.json=
 ```
 
 ## post /register 
-```js 
-req.body = { 
+
+req.body
+```json 
+{ 
   "name": "string", 
   "email": "string", 
   "password": "string" 
-}
+}```
 
-res.json = {
+response
+```json
+{
   "id": "string",
   "name": "string",
   "email": "string",
@@ -29,12 +35,13 @@ res.json = {
 ```
 
 ## get /user/:userId 
-```js
-req.params = { 
+req.params
+```json
   "userId": "string"
-}
+}```
 
-res.json = 
+response
+```json
 {
   "_id": "string",
 	"name": "string",
@@ -43,13 +50,14 @@ res.json =
 ```
 
 ## get /user/:userId/task 
-```js
-req.params =
+req.params
+```json
 {
   "userId": "string"
-}
+}```
 
-res.json =
+response
+```json
 [
   {
   "_id": "string",
@@ -79,49 +87,84 @@ res.json =
 ```
 
 ## post /task 
-```js
-req.body = 
+req.body
+```json
 { 
   "name": "string", 
   "description": "string", 
   "deadline": "string", 
   "subTasks": "Task[]" 
-}
+}```
 
-res.json =
+response
+```json
 {
   "message": "Task created successfully"
 }
 ```
 
 ## get /task/:taskId 
-```js
-req.params =
+req.params
+```json
 {
   "taskId": "string"
-}
+}```
 
-res.json = "Task"
+response = Task
+```json
+{
+  "_id": "string",
+  "userId": "string",
+  "name":"you ",
+  "sessions":[
+    {
+    "taskId": "string",
+    "duration": "number",
+    "isDone": boolean,
+    "createdAt": "date",
+    "updatedAt": "date"
+    }
+  ],
+  "subTasks": [
+    {
+    "name": "string",
+    "isDone": "boolean"
+    }
+  ],
+  "description": "string",
+  "deadline": "string",
+  "isDone": "boolean",
+  "createdAt": "date"
+  }
 ```
 
 ## get /task/:taskId/session 
-```js
-req.params =
+req.params
+```json
 {
   "taskId": "string"
-}
+}```
 
-res.json = "Session[]"
+response
+```json
+{
+  "taskId": "string",
+  "duration": "number",
+  "isDone": boolean,
+  "createdAt": "date",
+  "updatedAt": "date"
+}
 ```
 
 ## post /task/:taskId/session 
-```js
+```json
 req.params =
 {
   "taskId": "string"
-}
+}```
 
-res.json =
+response
+```json
 {
   "message": "Session created successfully",
   "data": "updateResult",
@@ -130,14 +173,15 @@ res.json =
 ```
 
 ## patch /task/:taskId/session/:sessionId 
-```js 
+```json
 req.params =
 {
   "taskId": "string",
   "sessionId": "string"
-}
+}```
 
-res.json =
+response
+```json
 {
   "success": true,
   "updateResult",
@@ -146,10 +190,14 @@ res.json =
 ```
 
 ## get /task/:taskId/session/:sessionId 
-```js
+```json
 req.params =
 {
   "taskId": "string",
   "sessionId": "string"
-}
+}```
+
+response
+```json
+
 ```
