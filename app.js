@@ -25,7 +25,7 @@ app.get("/task/:taskId", TaskController.getById);
 app.get("/task/:taskId/session", SessionController.getByTaskId);
 app.post("/task/:taskId/session", SessionController.create);
 app.patch("/task/:taskId/session/:sessionId", SessionController.isDone);
-app.get("/task/:taskId/session/:sessionId", SessionController.getById);
+// app.get("/task/:taskId/session/:sessionId", SessionController.getById);
 // app.get('/task/:taskId/session/:sessionId/done', SessionController.isDone);
 
 // error helper
