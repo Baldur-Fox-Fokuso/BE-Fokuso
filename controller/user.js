@@ -91,10 +91,12 @@ class UserController {
       const access_token = createToken({
         _id: user._id,
         email: user.email,
+        name: user.name
       });
 
       res.status(200).json({
         _id: user._id,
+        name: user.name,
         access_token,
       });
     } catch (error) {
