@@ -1,17 +1,14 @@
 const ErrorHandler = (err, req, res, next) => {
-  console.log('masuk ErrorHandler');
+  console.log("masuk ErrorHandler");
   let errorCode = err.code ?? 500;
-  let errorMessage = err.message ?? 'Internal server error';
+  let errorMessage = err.message ?? "Internal server error";
 
   switch (err.name) {
-    case 'JsonWebTokenError':
+    case "JsonWebTokenError":
       errorCode = 401;
-      errorMessage = 'Unauthorized';
+      errorMessage = "Unauthorized";
       break;
-    case 'ValidationError':
-      errorCode = 400;
-      errorMessage = err.errors.map(e => e.message);
-      break;
+      S;
   }
 
   switch (errorCode) {
@@ -19,13 +16,9 @@ const ErrorHandler = (err, req, res, next) => {
       break;
     case 401:
       break;
-    case 403:
-      errorMessage = 'Forbidden';
-      break;
+
     case 404:
-      errorMessage = 'Not Found';
-      break;
-    default:
+      errorMessage = "Not Found";
       break;
   }
   res.status(errorCode).json({
@@ -33,6 +26,6 @@ const ErrorHandler = (err, req, res, next) => {
     status: errorCode,
     message: errorMessage,
   });
-}
+};
 
 module.exports = ErrorHandler;
