@@ -21,10 +21,10 @@ class TaskController {
       const { authorization } = req.headers;
       console.log(authorization, "<== authorization");
       const userId = verifyToken(authorization?.split(" ")[1]);
-      console.log(userId, "<-- userId");
+      console.log(userId, "<-- verify");
       // TODO: ketika tidak ada, lempar error Unauthorized
       if (!userId) {
-        throw { code: 401 };
+        throw { code: 401, message: "Unauthorized" };
       }
 
       // ketika tidak ada name, lempar error Invalid input
@@ -52,16 +52,18 @@ class TaskController {
     }
   }
 
-  static async getById(req, res) {
+  static async getById(req, res, next) {
     try {
       const { taskId } = req.params;
-      if (!taskId) {
-        throw { code: 400, message: "Invalid input" };
-      }
+      // if (!taskId) {
+      //   throw { code: 400, message: "Invalid input" };
+      // }
 
       const task = await getCollection("tasks").findOne({
         _id: new ObjectId(taskId),
       });
+
+      if (!task) throw { code: 404 };
 
       res.status(200).json(task);
     } catch (error) {
@@ -73,14 +75,12 @@ class TaskController {
   static async getByUser(req, res, next) {
     try {
       const { userId } = req.params;
-      if (!userId) {
-        throw { code: 400, message: "Invalid input" };
-      }
 
       const tasks = await getCollection("tasks")
         .find({ userId: new ObjectId(userId) })
         .toArray();
 
+      if (tasks.length === 0) throw { code: 404 };
       res.status(200).json(tasks);
     } catch (error) {
       console.log(error, "<-- Task getByUser error");
@@ -88,82 +88,82 @@ class TaskController {
     }
   }
 
-  static async deleteTask(req, res, next) {
-    try {
-      const { taskId } = req.body;
-      const deleteResult = await getDb().deleteOne({
-        _id: new ObjectId(taskId),
-      });
+  // static async deleteTask(req, res, next) {
+  //   try {
+  //     const { taskId } = req.body;
+  //     const deleteResult = await getDb().deleteOne({
+  //       _id: new ObjectId(taskId),
+  //     });
 
-      res.status(200).json(deleteResult);
-    } catch (error) {
-      console.log(error, "<-- deleteTask error");
-    }
-  }
+  //     res.status(200).json(deleteResult);
+  //   } catch (error) {
+  //     console.log(error, "<-- deleteTask error");
+  //   }
+  // }
 
-  static async createSubTask(req, res, next) {
-    try {
-      // get name from req.body
-      const { name, taskId } = req.body;
-      // throw error when name does not exist
-      if (!name || !taskId) {
-        throw { code: 400, message: "Invalid input" };
-      }
+  // static async createSubTask(req, res, next) {
+  //   try {
+  //     // get name from req.body
+  //     const { name, taskId } = req.body;
+  //     // throw error when name does not exist
+  //     if (!name || !taskId) {
+  //       throw { code: 400, message: "Invalid input" };
+  //     }
 
-      const filter = { taskId: new ObjectId(taskId) };
-      const update = {
-        $push: {
-          subtasks: {
-            _id: new ObjectId(),
-            taskId: new ObjectId(taskId),
-            name,
-            isDone: false,
-          },
-        },
-      };
-      const newSubTask = await getDb().updateOne(filter, update);
-      res.status(200).json(newSubTask);
-    } catch (error) {
-      console.log(error, "<-- createSubTask error");
-      next(error);
-    }
-  }
+  //     const filter = { taskId: new ObjectId(taskId) };
+  //     const update = {
+  //       $push: {
+  //         subtasks: {
+  //           _id: new ObjectId(),
+  //           taskId: new ObjectId(taskId),
+  //           name,
+  //           isDone: false,
+  //         },
+  //       },
+  //     };
+  //     const newSubTask = await getDb().updateOne(filter, update);
+  //     res.status(200).json(newSubTask);
+  //   } catch (error) {
+  //     console.log(error, "<-- createSubTask error");
+  //     next(error);
+  //   }
+  // }
 
-  static async deleteSubTask(req, res, next) {
-    try {
-      // get taskId and subTaskId from req.body
-      const { taskId, subTaskId } = req.body;
-      // throw error when taskId or subTaskId does not exits
-      if (!taskId || !subTaskId) {
-        // throw error
-        throw { code: 400, message: "Invalid input" };
-      }
+  // static async deleteSubTask(req, res, next) {
+  //   try {
+  //     // get taskId and subTaskId from req.body
+  //     const { taskId, subTaskId } = req.body;
+  //     // throw error when taskId or subTaskId does not exits
+  //     if (!taskId || !subTaskId) {
+  //       // throw error
+  //       throw { code: 400, message: "Invalid input" };
+  //     }
 
-      const filter = { taskId: new ObjectId(taskId) };
-      const update = {
-        $pull: {
-          subtasks: {
-            _id: new ObjectId(subTaskId),
-          },
-        },
-      };
-      // deleteResult by deleting the embedded document in array
-      const deleteResult = await getDb().updateOne(filter, update);
+  //     const filter = { taskId: new ObjectId(taskId) };
+  //     const update = {
+  //       $pull: {
+  //         subtasks: {
+  //           _id: new ObjectId(subTaskId),
+  //         },
+  //       },
+  //     };
+  //     // deleteResult by deleting the embedded document in array
+  //     const deleteResult = await getDb().updateOne(filter, update);
 
-      res.status(200).json(deleteResult);
-    } catch (error) {
-      console.log(error, "<-- deleteSubTask error");
-    }
-  }
+  //     res.status(200).json(deleteResult);
+  //   } catch (error) {
+  //     console.log(error, "<-- deleteSubTask error");
+  //     next(error)
+  //   }
+  // }
 
   // body: date; params: userId
   static async filterByDate(req, res, next) {
     try {
       const { date } = req.body;
       const { userId } = req.params;
-      console.log("TaskController filterByDate"); // start logging
+      console.log(date, userId, "TaskController filterByDate"); // start logging
       if (!date) throw { code: 400, message: "Input date is empty" };
-      if (!userId) throw { code: 400, message: "userId is empty" };
 
       const dateYMD = date.split("T")[0];
       console.log(dateYMD, "<-- dateYMD");
@@ -213,38 +213,41 @@ class TaskController {
         })
         .toArray();
 
+      if (tasks.length === 0) throw { code: 404 };
+
       res.status(200).json(tasks);
     } catch (error) {
       console.log(error, "<-- error Task getTodayTasks");
+      next(error);
     }
   }
 
-  static async last7Days(req, res, next) {
-    try {
-      const { userId } = req.params;
-      console.log("TaskController last7Days start");
-      const today = new Date();
-      const start = today.setDate(today.getDate() - 7);
+  // static async last7Days(req, res, next) {
+  //   try {
+  //     const { userId } = req.params;
+  //     console.log("TaskController last7Days start");
+  //     const today = new Date();
+  //     const start = today.setDate(today.getDate() - 7);
 
-      const end = new Date();
-      end.setHours(23, 59, 59, 999);
-      console.log("start:", start, "end:", end);
-      const tasks = await getDb()
-        .find({
-          userId: new ObjectId(userId),
-          createdAt: {
-            userId: new ObjectId(userId),
-            $gte: start,
-            $lt: end,
-          },
-        })
-        .toArray();
+  //     const end = new Date();
+  //     end.setHours(23, 59, 59, 999);
+  //     console.log("start:", start, "end:", end);
+  //     const tasks = await getDb()
+  //       .find({
+  //         userId: new ObjectId(userId),
+  //         createdAt: {
+  //           userId: new ObjectId(userId),
+  //           $gte: start,
+  //           $lt: end,
+  //         },
+  //       })
+  //       .toArray();
 
-      res.status(200).json(tasks);
-    } catch (error) {
-      console.log(error, "<-- TaskController last7Days error");
-    }
-  }
+  //     res.status(200).json(tasks);
+  //   } catch (error) {
+  //     console.log(error, "<-- TaskController last7Days error");
+  //   }
+  // }
 
   static async getRecentTasks(req, res, next) {
     try {
@@ -257,13 +260,14 @@ class TaskController {
           createdAt: -1,
         })
         .toArray();
-
+      if (tasks.length === 0) throw { code: 404 };
       // limit to first 5 tasks
       const tasksRet = tasks.slice(0, 5);
 
       res.status(200).json(tasksRet);
     } catch (error) {
       console.log(error, "<-- TaskController getRecentTasks Error");
+      next(error);
     }
   }
 }
