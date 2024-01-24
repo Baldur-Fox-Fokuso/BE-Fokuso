@@ -1,7 +1,7 @@
 const { getCollection } = require("../config/mongodb");
 const { comparePass, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
-const { ObjectId } = require("mongodb")
+const { ObjectId } = require("mongodb");
 // const validate = require("validate.js")
 //
 // const userConstraints = {
@@ -27,25 +27,28 @@ class UserController {
   //   return getCollection("users");
   // }
 
-  static async getById(req, res, next) {
-    try {
-      const { userId } = req.params;
-      if (!userId) {
-        throw { code: 400, message: "invalid input" };
-      }
-      const user = await getDb().findOne({
-        _id: new ObjectId(userId),
-      }, {
-        projection: {
-          password: 0
-        }
-      });
-      res.status(200).json(user);
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  }
+  // static async getById(req, res, next) {
+  //   try {
+  //     const { userId } = req.params;
+  //     if (!userId) {
+  //       throw { code: 400, message: "invalid input" };
+  //     }
+  //     const user = await getDb().findOne(
+  //       {
+  //         _id: new ObjectId(userId),
+  //       },
+  //       {
+  //         projection: {
+  //           password: 0,
+  //         },
+  //       }
+  //     );
+  //     res.status(200).json(user);
+  //   } catch (error) {
+  //     console.log(error);
+  //     next(error);
+  //   }
+  // }
 
   static async register(req, res, next) {
     try {
