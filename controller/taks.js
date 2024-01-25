@@ -131,14 +131,17 @@ class TaskController {
 
   static async deleteSubTask(req, res, next) {
     try {
+      console.log('TaskController deleteSubTask')
       // get taskId and subTaskId from req.body
       const { taskId, subTaskId } = req.params;
+      console.log('taskId:', taskId)
+      console.log('subTaskId', subTaskId)
       // throw error when taskId or subTaskId does not exits
 
-      const filter = { taskId: new ObjectId(taskId) };
+      const filter = { _id: new ObjectId(taskId) };
       const update = {
         $pull: {
-          subtasks: {
+          subTasks: {
             _id: new ObjectId(subTaskId),
           },
         },
