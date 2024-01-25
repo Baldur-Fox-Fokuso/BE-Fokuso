@@ -33,8 +33,8 @@ app.patch("/task/:taskId/session/:sessionId", SessionController.isDone);
 // error helper
 app.use(ErrorHandler);
 
-// app.listen(PORT, () => {
-//   console.log(`🚀🚀🚀 Reading server at:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`🚀🚀🚀 Reading server at:${PORT}`);
+});
 
 module.exports = app;
