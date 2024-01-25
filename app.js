@@ -23,7 +23,7 @@ app.get("/user/:userId/task/recent", TaskController.getRecentTasks);
 app.post("/task", TaskController.create);
 app.get("/task/:taskId", TaskController.getById);
 app.delete("/task/:taskId", TaskController.deleteTask);
-app.delete("/task/:taskId/subtask/:subtaskId", TaskController.deleteSubTask);
+app.delete("/task/:taskId/subtask/:subTaskId", TaskController.deleteSubTask);
 app.get("/task/:taskId/session", SessionController.getByTaskId);
 app.post("/task/:taskId/session", SessionController.create);
 app.patch("/task/:taskId/session/:sessionId", SessionController.isDone);
