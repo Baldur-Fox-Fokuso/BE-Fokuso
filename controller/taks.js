@@ -78,6 +78,9 @@ class TaskController {
 
       const tasks = await getCollection("tasks")
         .find({ userId: new ObjectId(userId) })
+        .sort({
+          createdAt: -1,
+        })
         .toArray();
 
       if (tasks.length === 0) throw { code: 404 };
