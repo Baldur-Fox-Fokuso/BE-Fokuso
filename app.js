@@ -22,6 +22,8 @@ app.get("/user/:userId/task/today", TaskController.getTodayTasks);
 app.get("/user/:userId/task/recent", TaskController.getRecentTasks);
 app.post("/task", TaskController.create);
 app.get("/task/:taskId", TaskController.getById);
+app.delete("/task/:taskId", TaskController.deleteTask);
+app.delete("/task/:taskId/subtask/:subTaskId", TaskController.deleteSubTask);
 app.get("/task/:taskId/session", SessionController.getByTaskId);
 app.post("/task/:taskId/session", SessionController.create);
 app.patch("/task/:taskId/session/:sessionId", SessionController.isDone);
@@ -31,8 +33,8 @@ app.patch("/task/:taskId/session/:sessionId", SessionController.isDone);
 // error helper
 app.use(ErrorHandler);
 
-// app.listen(PORT, () => {
-//   console.log(`🚀🚀🚀 Reading server at:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`🚀🚀🚀 Reading server at:${PORT}`);
+});
 
 module.exports = app;

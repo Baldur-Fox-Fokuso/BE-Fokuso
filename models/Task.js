@@ -31,6 +31,7 @@ class Task {
     let arr = [];
     subTasks.forEach((el) => {
       arr.push({
+        _id: new ObjectId(),
         name: el,
         isDone: false,
       });

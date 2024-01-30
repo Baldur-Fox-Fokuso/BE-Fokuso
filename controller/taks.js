@@ -91,18 +91,18 @@ class TaskController {
     }
   }
 
-  // static async deleteTask(req, res, next) {
-  //   try {
-  //     const { taskId } = req.body;
-  //     const deleteResult = await getDb().deleteOne({
-  //       _id: new ObjectId(taskId),
-  //     });
+  static async deleteTask(req, res, next) {
+    try {
+      const { taskId } = req.params;
+      const deleteResult = await getDb().deleteOne({
+        _id: new ObjectId(taskId),
+      });
 
-  //     res.status(200).json(deleteResult);
-  //   } catch (error) {
-  //     console.log(error, "<-- deleteTask error");
-  //   }
-  // }
+      res.status(200).json(deleteResult);
+    } catch (error) {
+      console.log(error, "<-- deleteTask error");
+    }
+  }
 
   // static async createSubTask(req, res, next) {
   //   try {
@@ -132,33 +132,32 @@ class TaskController {
   //   }
   // }
 
-  // static async deleteSubTask(req, res, next) {
-  //   try {
-  //     // get taskId and subTaskId from req.body
-  //     const { taskId, subTaskId } = req.body;
-  //     // throw error when taskId or subTaskId does not exits
-  //     if (!taskId || !subTaskId) {
-  //       // throw error
-  //       throw { code: 400, message: "Invalid input" };
-  //     }
+  static async deleteSubTask(req, res, next) {
+    try {
+      console.log('TaskController deleteSubTask')
+      // get taskId and subTaskId from req.body
+      const { taskId, subTaskId } = req.params;
+      console.log('taskId:', taskId)
+      console.log('subTaskId', subTaskId)
+      // throw error when taskId or subTaskId does not exits
 
-  //     const filter = { taskId: new ObjectId(taskId) };
-  //     const update = {
-  //       $pull: {
-  //         subtasks: {
-  //           _id: new ObjectId(subTaskId),
-  //         },
-  //       },
-  //     };
-  //     // deleteResult by deleting the embedded document in array
-  //     const deleteResult = await getDb().updateOne(filter, update);
+      const filter = { _id: new ObjectId(taskId) };
+      const update = {
+        $pull: {
+          subTasks: {
+            _id: new ObjectId(subTaskId),
+          },
+        },
+      };
+      // deleteResult by deleting the embedded document in array
+      const deleteResult = await getDb().updateOne(filter, update);
 
-  //     res.status(200).json(deleteResult);
-  //   } catch (error) {
-  //     console.log(error, "<-- deleteSubTask error");
-  //     next(error)
-  //   }
-  // }
+      res.status(200).json(deleteResult);
+    } catch (error) {
+      console.log(error, "<-- deleteSubTask error");
+      next(error)
+    }
+  }
 
   // body: date; params: userId
   static async filterByDate(req, res, next) {
