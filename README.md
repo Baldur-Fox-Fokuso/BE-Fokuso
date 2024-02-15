@@ -8,6 +8,12 @@ Set the database url [(connection string)](https://www.mongodb.com/basics/mongod
 MONGO_URI = "mongodb+srv://<username>:<password>@<mongodb atlas domain>"
 ```
 
+Set the JsonWebToken secret in .env
+
+```env
+JWT_SECRET = "secret"
+```
+
 Server can be run locally, or on a VPS  
 Run the server using npm
 
