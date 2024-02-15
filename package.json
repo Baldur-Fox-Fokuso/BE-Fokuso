@@ -4,6 +4,7 @@
   "description": "Work in progress......",
   "main": "index.js",
   "scripts": {
+    "dev": "node app.js",
     "test": "jest --runInBand --forceExit --coverage"
   },
   "keywords": [],

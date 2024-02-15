@@ -1,13 +1,16 @@
-## post /login 
+## post /login
 
 req.body
+
 ```json
 {
   "email": "string",
   "password": "string"
-} ```
+}
+```
 
 response
+
 ```json
 {
   "_id": "string",
@@ -15,48 +18,60 @@ response
 }
 ```
 
-## post /register 
+## post /register
 
 req.body
-```json 
-{ 
-  "name": "string", 
-  "email": "string", 
-  "password": "string" 
-}```
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
 
 response
+
 ```json
 {
   "id": "string",
   "name": "string",
-  "email": "string",
+  "email": "string"
 }
 ```
 
-## get /user/:userId 
+## get /user/:userId
+
 req.params
+
 ```json
+{
   "userId": "string"
-}```
+}
+```
 
 response
+
 ```json
 {
   "_id": "string",
-	"name": "string",
-	"email": "string"
+  "name": "string",
+  "email": "string"
 }
 ```
 
-## get /user/:userId/task 
+## get /user/:userId/task
+
 req.params
+
 ```json
 {
   "userId": "string"
-}```
+}
+```
 
 response
+
 ```json
 [
   {
@@ -86,31 +101,39 @@ response
 ]
 ```
 
-## post /task 
+## post /task
+
 req.body
+
 ```json
-{ 
-  "name": "string", 
-  "description": "string", 
-  "deadline": "string", 
-  "subTasks": "Task[]" 
-}```
+{
+  "name": "string",
+  "description": "string",
+  "deadline": "string",
+  "subTasks": "Task[]"
+}
+```
 
 response
+
 ```json
 {
   "message": "Task created successfully"
 }
 ```
 
-## get /task/:taskId 
+## get /task/:taskId
+
 req.params
+
 ```json
 {
   "taskId": "string"
-}```
+}
+```
 
 response = Task
+
 ```json
 {
   "_id": "string",
@@ -138,14 +161,18 @@ response = Task
   }
 ```
 
-## get /task/:taskId/session 
+## get /task/:taskId/session
+
 req.params
+
 ```json
 {
   "taskId": "string"
-}```
+}
+```
 
 response
+
 ```json
 {
   "taskId": "string",
@@ -156,14 +183,17 @@ response
 }
 ```
 
-## post /task/:taskId/session 
+## post /task/:taskId/session
+
 ```json
 req.params =
 {
   "taskId": "string"
-}```
+}
+```
 
 response
+
 ```json
 {
   "message": "Session created successfully",
@@ -172,15 +202,18 @@ response
 }
 ```
 
-## patch /task/:taskId/session/:sessionId 
+## patch /task/:taskId/session/:sessionId
+
 ```json
 req.params =
 {
   "taskId": "string",
   "sessionId": "string"
-}```
+}
+```
 
 response
+
 ```json
 {
   "success": true,
@@ -189,15 +222,18 @@ response
 }
 ```
 
-## get /task/:taskId/session/:sessionId 
+## get /task/:taskId/session/:sessionId
+
 ```json
 req.params =
 {
   "taskId": "string",
   "sessionId": "string"
-}```
+}
+```
 
 response
+
 ```json
 
 ```
