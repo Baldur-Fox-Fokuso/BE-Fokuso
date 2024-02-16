@@ -15,6 +15,12 @@ JWT_SECRET = "secret"
 ```
 
 Server can be run locally, or on a VPS  
+
+First, install the dependencies using npm  
+```sh
+npm install
+```
+
 Run the server using npm
 
 ```sh
